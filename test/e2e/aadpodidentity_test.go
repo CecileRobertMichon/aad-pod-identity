@@ -41,7 +41,10 @@ var _ = BeforeSuite(func() {
 	fmt.Println("Creating directory ", templateOutputPath)
 
 	// Create a folder '_output' in template/ for storing temporary deployment files
-	err := os.Mkdir(templateOutputPath, os.ModePerm)
+	var err error
+	if _, err := os.Stat(templateOutputPath); os.IsNotExist(err) {
+		err = os.Mkdir(templateOutputPath, os.ModePerm)
+	}
 	Expect(err).NotTo(HaveOccurred())
 
 	c, err := config.ParseConfig()
